@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        async function submitEmployeeForm(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            const data = {
+                id: formData.get('id'),
+                name: formData.get('name'),
+                salary: formData.get('salary'),
+                dept_id: formData.get('dept_id')
+            };
+
+            try {
+                const response = await fetch('/create_employee', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                const result = await response.json();
+                alert(result.message || result.error);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error occurred while creating employee.');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to the Home Page!</h1>
+    <p>This is a simple Flask app. If you see this, the page is loading correctly.</p>
+
+    <h2>Input Employee Data</h2>
+    <form id="employeeForm" onsubmit="submitEmployeeForm(event)">
+        <label for="id">Employee ID:</label>
+        <input type="number" id="id" name="id" required>
+        <br><br>
+
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        <br><br>
+
+        <label for="salary">Salary:</label>
+        <input type="number" id="salary" name="salary" required>
+        <br><br>
+
+        <label for="dept_id">Department ID:</label>
+        <input type="text" id="dept_id" name="dept_id" required>
+        <br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <br>
+    <a href="/employees">View Employee List</a>
+</body>
+</html>
+
